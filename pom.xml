@@ -22,6 +22,11 @@
       <name>Taylor Jones</name>
       <email>monitorjbl@gmail.com</email>
     </developer>
+    <developer>
+      <id>boschi</id>
+      <name>Pedro Boschi</name>
+      <email>boschi@gmail.com</email>
+    </developer>
   </developers>
 
   <build>
