@@ -332,7 +332,7 @@ public class StreamingReader implements Iterable<Row>, AutoCloseable {
           log.debug("Created sst cache file [" + sstCache.getAbsolutePath() + "]");
           sst = BufferedStringsTable.getSharedStringsTable(sstCache, sstCacheSizeBytes, pkg);
         } else {
-          sst = reader.getSharedStringsTable();
+          sst = (SharedStringsTable) reader.getSharedStringsTable();
         }
 
         StylesTable styles = reader.getStylesTable();

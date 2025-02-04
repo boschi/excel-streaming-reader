@@ -2,15 +2,7 @@ package com.monitorjbl.xlsx.impl;
 
 import com.monitorjbl.xlsx.exceptions.NotSupportedException;
 import org.apache.poi.ss.formula.FormulaParseException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Comment;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Hyperlink;
-import org.apache.poi.ss.usermodel.RichTextString;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
@@ -151,19 +143,19 @@ public class StreamingCell implements Cell {
      */
     @Override
     public CellType getCellType() {
-        if(formulaType) {
+        if (formulaType) {
             return CellType.FORMULA;
-        } else if(contentsSupplier.getContent() == null || type == null) {
+        } else if (contentsSupplier.getContent() == null || type == null) {
             return CellType.BLANK;
-        } else if("n".equals(type)) {
+        } else if ("n".equals(type)) {
             return CellType.NUMERIC;
-        } else if("s".equals(type) || "inlineStr".equals(type) || "str".equals(type)) {
+        } else if ("s".equals(type) || "inlineStr".equals(type) || "str".equals(type)) {
             return CellType.STRING;
-        } else if("str".equals(type)) {
+        } else if ("f".equals(type)) {
             return CellType.FORMULA;
-        } else if("b".equals(type)) {
+        } else if ("b".equals(type)) {
             return CellType.BOOLEAN;
-        } else if("e".equals(type)) {
+        } else if ("e".equals(type)) {
             return CellType.ERROR;
         } else {
             throw new UnsupportedOperationException("Unsupported cell type '" + type + "'");
@@ -205,7 +197,7 @@ public class StreamingCell implements Cell {
      */
     @Override
     public Date getDateCellValue() {
-        if(getCellType() == CellType.STRING) {
+        if (getCellType() == CellType.STRING) {
             throw new IllegalStateException("Cell type cannot be CELL_TYPE_STRING");
         }
         return rawContents == null ? null : DateUtil.getJavaDate(getNumericCellValue(), use1904Dates);
@@ -225,16 +217,12 @@ public class StreamingCell implements Cell {
     @Override
     public boolean getBooleanCellValue() {
         CellType cellType = getCellType();
-        switch(cellType) {
-            case BLANK:
-                return false;
-            case BOOLEAN:
-                return rawContents != null && TRUE_AS_STRING.equals(rawContents);
-            case FORMULA:
-                throw new NotSupportedException();
-            default:
-                throw typeMismatch(CellType.BOOLEAN, cellType, false);
-        }
+        return switch (cellType) {
+            case BLANK -> false;
+            case BOOLEAN -> TRUE_AS_STRING.equals(rawContents);
+            case FORMULA -> throw new NotSupportedException();
+            default -> throw typeMismatch(CellType.BOOLEAN, cellType, false);
+        };
     }
 
     /**
@@ -249,18 +237,11 @@ public class StreamingCell implements Cell {
     @Override
     public XSSFRichTextString getRichStringCellValue() {
         CellType cellType = getCellType();
-        XSSFRichTextString rt;
-        switch(cellType) {
-            case BLANK:
-                rt = new XSSFRichTextString("");
-                break;
-            case STRING:
-                rt = new XSSFRichTextString(getStringCellValue());
-                break;
-            default:
-                throw new NotSupportedException();
-        }
-        return rt;
+        return switch (cellType) {
+            case BLANK -> new XSSFRichTextString("");
+            case STRING -> new XSSFRichTextString(getStringCellValue());
+            default -> throw new NotSupportedException();
+        };
     }
 
     @Override
@@ -270,8 +251,8 @@ public class StreamingCell implements Cell {
 
     private static RuntimeException typeMismatch(CellType expectedType, CellType actualType, boolean isFormulaCell) {
         String msg = "Cannot get a "
-            + getCellTypeName(expectedType) + " value from a "
-            + getCellTypeName(actualType) + " " + (isFormulaCell ? "formula " : "") + "cell";
+                + getCellTypeName(expectedType) + " value from a "
+                + getCellTypeName(actualType) + " " + (isFormulaCell ? "formula " : "") + "cell";
         return new IllegalStateException(msg);
     }
 
@@ -279,21 +260,15 @@ public class StreamingCell implements Cell {
      * Used to help format error messages
      */
     private static String getCellTypeName(CellType cellType) {
-        switch(cellType) {
-            case BLANK:
-                return "blank";
-            case STRING:
-                return "text";
-            case BOOLEAN:
-                return "boolean";
-            case ERROR:
-                return "error";
-            case NUMERIC:
-                return "numeric";
-            case FORMULA:
-                return "formula";
-        }
-        return "#unknown cell type (" + cellType + ")#";
+        return switch (cellType) {
+            case BLANK -> "blank";
+            case STRING -> "text";
+            case BOOLEAN -> "boolean";
+            case ERROR -> "error";
+            case NUMERIC -> "numeric";
+            case FORMULA -> "formula";
+            default -> "#unknown cell type (" + cellType + ")#";
+        };
     }
 
     /**
@@ -312,7 +287,7 @@ public class StreamingCell implements Cell {
      */
     @Override
     public String getCellFormula() {
-        if(!formulaType)
+        if (!formulaType)
             throw new IllegalStateException("This cell does not have a formula");
         return formula;
     }
@@ -326,16 +301,16 @@ public class StreamingCell implements Cell {
      */
     @Override
     public CellType getCachedFormulaResultType() {
-        if(formulaType) {
-            if(contentsSupplier.getContent() == null || type == null) {
+        if (formulaType) {
+            if (contentsSupplier.getContent() == null || type == null) {
                 return CellType.BLANK;
-            } else if("n".equals(type)) {
+            } else if ("n".equals(type)) {
                 return CellType.NUMERIC;
-            } else if("s".equals(type) || "inlineStr".equals(type) || "str".equals(type)) {
+            } else if ("s".equals(type) || "inlineStr".equals(type) || "str".equals(type)) {
                 return CellType.STRING;
-            } else if("b".equals(type)) {
+            } else if ("b".equals(type)) {
                 return CellType.BOOLEAN;
-            } else if("e".equals(type)) {
+            } else if ("e".equals(type)) {
                 return CellType.ERROR;
             } else {
                 throw new UnsupportedOperationException("Unsupported cell type '" + type + "'");
@@ -432,7 +407,17 @@ public class StreamingCell implements Cell {
      */
     @Override
     public byte getErrorCellValue() {
-        throw new NotSupportedException();
+        return switch (String.valueOf(rawContents)) {
+            case "(no error)" -> (byte) -1;
+            case "#NULL!" -> 0;
+            case "#DIV/0!" -> 0x07;
+            case "#VALUE!" -> 0x0F;
+            case "#REF!" -> 0x17;
+            case "#NAME?" -> 0x1D;
+            case "#NUM!" -> 0x24;
+            case "#N/A" -> 0x2A;
+            default -> throw new NotSupportedException();
+        };
     }
 
     /**
