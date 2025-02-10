@@ -16,7 +16,7 @@ This library serves as a wrapper around that streaming API while preserving the 
 
 # Include
 
-This library is available from Maven Central, and you can optionally install it yourself. The Maven installation instructions can be found on the [release](https://github.com/monitorjbl/excel-streaming-reader/releases) page.
+This library is available from Maven Central, and you can optionally install it yourself. The Maven installation instructions can be found on the [release](https://github.com/boschi/excel-streaming-reader/releases) page.
 
 To use it, add this to your POM:
 
