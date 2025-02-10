@@ -1,6 +1,5 @@
-![Maven Central Version](https://img.shields.io/maven-central/v/io.github.boschi/xlsx-streamer)
+[![][maven img]][maven]
 ![Run Status](https://gitlab.com/monitorjbl/excel-streaming-reader/badges/master/pipeline.svg)
-
 
 Profiled with [![Yourkit](https://www.yourkit.com/images/yklogo.png)](https://www.yourkit.com/java/profiler/)
 
@@ -153,3 +152,6 @@ Workbook workbook = StreamingReader.builder()
 ```
 
 This library will ONLY work with XLSX files. The older XLS format is not capable of being streamed.
+
+[maven]:https://central.sonatype.com/artifact/io.github.boschi/xlsx-streamer
+[maven img]:https://img.shields.io/maven-central/v/io.github.boschi/xlsx-streamer
