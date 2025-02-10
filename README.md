@@ -1,4 +1,6 @@
+![Maven Central Version](https://img.shields.io/maven-central/v/io.github.boschi/xlsx-streamer)
 ![Run Status](https://gitlab.com/monitorjbl/excel-streaming-reader/badges/master/pipeline.svg)
+
 
 Profiled with [![Yourkit](https://www.yourkit.com/images/yklogo.png)](https://www.yourkit.com/java/profiler/)
 
@@ -12,22 +14,18 @@ This library serves as a wrapper around that streaming API while preserving the 
 
 **NOTE**: This library only supports reading XLSX files.
 
-# Important notice about Java 7 support
-
-The latest versions of this library (2.x) have dropped support for Java 7. This is due to POI 4.0 requiring Java 8; as that is a core dependency of this library, it cannot support older versions of Java. The older 1.x and 0.x versions will no longer be maintained.
-
 # Include
 
-This library is available from from Maven Central, and you can optionally install it yourself. The Maven installation instructions can be found on the [release](https://github.com/monitorjbl/excel-streaming-reader/releases) page.
+This library is available from Maven Central, and you can optionally install it yourself. The Maven installation instructions can be found on the [release](https://github.com/monitorjbl/excel-streaming-reader/releases) page.
 
 To use it, add this to your POM:
 
 ```
 <dependencies>
   <dependency>
-    <groupId>com.monitorjbl</groupId>
+    <groupId>io.github.boschi</groupId>
     <artifactId>xlsx-streamer</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.1</version>
   </dependency>
 </dependencies>  
 ```
@@ -62,7 +60,7 @@ for (Sheet sheet : workbook){
 Or open a sheet by name or index:
 
 ```java
-Sheet sheet = workbook.getSheet("My Sheet")
+Sheet sheet = workbook.getSheet("My Sheet");
 ```
 
 The StreamingWorkbook is an autoclosable resource, and it's important that you close it to free the filesystem resource it consumed. With Java 7, you can do this:
@@ -74,7 +72,7 @@ try (
           .rowCacheSize(100)
           .bufferSize(4096)
           .open(is)) {
-  for (Sheet sheet : workbook){
+  for (Sheet sheet : workbook) {
     System.out.println(sheet.getSheetName());
     for (Row r : sheet) {
       for (Cell c : r) {
@@ -108,9 +106,9 @@ This library uses SLF4j logging. This is a rare use case, but you can plug in yo
 ```
 <dependencies>
   <dependency>
-    <groupId>com.monitorjbl</groupId>
+    <groupId>io.github.boschi</groupId>
     <artifactId>xlsx-streamer</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.1</version>
   </dependency>
   <dependency>
     <groupId>org.slf4j</groupId>
